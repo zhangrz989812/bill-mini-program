@@ -1,0 +1,285 @@
+/* pages/category/category.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 类型切换 */
+.type-switch {
+  display: flex;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 10rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.switch-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.switch-btn.active {
+  background-color: #0052d9;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 编辑按钮 */
+.edit-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20rpx;
+}
+
+.edit-btn {
+  padding: 10rpx 20rpx;
+  background-color: #fff;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #0052d9;
+  border: 1rpx solid #0052d9;
+}
+
+/* 分类列表 */
+.category-list {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.category-item:last-child {
+  border-bottom: none;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.category-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.category-details {
+  flex: 1;
+}
+
+.category-name {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.category-count {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.category-actions {
+  display: flex;
+  gap: 15rpx;
+}
+
+.action-btn {
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+.edit-btn {
+  background-color: #f0f7ff;
+  color: #0052d9;
+}
+
+.delete-btn {
+  background-color: #fff0f0;
+  color: #fa5151;
+}
+
+.default-tag {
+  padding: 5rpx 15rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 新增按钮 */
+.add-section {
+  margin-top: 30rpx;
+}
+
+.add-btn {
+  background-color: #0052d9;
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 25rpx;
+  border: none;
+}
+
+.add-btn::after {
+  border: none;
+}
+
+/* 弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 90%;
+  max-height: 80vh;
+  background-color: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+}
+
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.form-input {
+  width: 100%;
+  padding: 20rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.icon-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15rpx;
+}
+
+.icon-item {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  border-radius: 12rpx;
+  background-color: #f5f5f5;
+  border: 2rpx solid transparent;
+}
+
+.icon-item.selected {
+  border-color: #0052d9;
+  background-color: #f0f7ff;
+}
+
+.color-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15rpx;
+}
+
+.color-item {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 3rpx solid transparent;
+}
+
+.color-item.selected {
+  border-color: #333;
+  transform: scale(1.1);
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.cancel-btn, .confirm-btn {
+  flex: 1;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 30rpx;
+  border: none;
+  border-radius: 0;
+}
+
+.cancel-btn {
+  background-color: #fff;
+  color: #666;
+}
+
+.confirm-btn {
+  background-color: #0052d9;
+  color: #fff;
+}
+
+.confirm-btn::after {
+  border: none;
+}

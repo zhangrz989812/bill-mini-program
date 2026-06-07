@@ -1,0 +1,94 @@
+<!--pages/index/index.wxml-->
+<wxs src="../../utils/format.wxs" module="fmt" />
+<view class="container">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-info" wx:if="{{hasUserInfo}}">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-details">
+        <text class="username">{{userInfo.nickName}}</text>
+        <text class="welcome">欢迎使用记账本</text>
+      </view>
+    </view>
+    <view class="login-section" wx:else>
+      <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      </button>
+      <input type="nickname" class="nickname-input" placeholder="请输入昵称" bindinput="onInputNickname" />
+    </view>
+  </view>
+
+  <!-- 月度概览卡片 -->
+  <view class="overview-card">
+    <view class="card-header">
+      <text class="card-title">本月概览</text>
+      <text class="card-date">2026年6月</text>
+    </view>
+    
+    <view class="overview-stats">
+      <view class="stat-item income">
+        <text class="stat-label">收入</text>
+        <text class="stat-value">¥{{fmt.toFixed2(monthOverview.totalIncome)}}</text>
+      </view>
+      
+      <view class="stat-divider"></view>
+      
+      <view class="stat-item expense">
+        <text class="stat-label">支出</text>
+        <text class="stat-value">¥{{fmt.toFixed2(monthOverview.totalExpense)}}</text>
+      </view>
+      
+      <view class="stat-divider"></view>
+      
+      <view class="stat-item balance">
+        <text class="stat-label">结余</text>
+        <text class="stat-value">¥{{fmt.toFixed2(monthOverview.balance)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="action-btn record-btn" bindtap="goToRecord">
+      <view class="action-icon">+</view>
+      <text class="action-text">记一笔</text>
+    </view>
+    
+    <view class="action-btn stats-btn" bindtap="viewAllRecords">
+      <view class="action-icon">📊</view>
+      <text class="action-text">统计</text>
+    </view>
+  </view>
+
+  <!-- 最近记录 -->
+  <view class="recent-section">
+    <view class="section-header">
+      <text class="section-title">最近记录</text>
+      <text class="section-more" bindtap="viewAllRecords">查看全部</text>
+    </view>
+    
+    <view class="record-list" wx:if="{{recentRecords.length > 0}}">
+      <view class="record-item" wx:for="{{recentRecords}}" wx:key="id">
+        <view class="record-info">
+          <text class="record-category">{{item.category}}</text>
+          <text class="record-remark">{{item.remark}}</text>
+          <text class="record-date">{{item.date}}</text>
+        </view>
+        <text class="record-amount {{item.type === 'income' ? 'income' : 'expense'}}">
+          {{item.type === 'income' ? '+' : ''}}{{fmt.toFixed2(item.amount)}}
+        </text>
+      </view>
+    </view>
+    
+    <view class="empty-state" wx:else>
+      <text class="empty-text">暂无记录</text>
+      <text class="empty-hint">点击上方"记一笔"开始记账</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,110 @@
+<!--pages/statistics/statistics.wxml-->
+<wxs src="../../utils/format.wxs" module="fmt" />
+<view class="container">
+  <!-- 时间选择器 -->
+  <view class="time-selector">
+    <view class="range-btn {{timeRange === 'month' ? 'active' : ''}}" 
+          data-range="month" bindtap="switchTimeRange">
+      月度
+    </view>
+    <view class="range-btn {{timeRange === 'year' ? 'active' : ''}}" 
+          data-range="year" bindtap="switchTimeRange">
+      年度
+    </view>
+    
+    <picker mode="date" fields="month" value="{{currentDate}}" bindchange="changeDate">
+      <view class="date-picker">
+        <text class="date-text">{{currentDate}}</text>
+        <text class="date-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 收支概览 -->
+  <view class="overview-card">
+    <view class="overview-item">
+      <text class="overview-label">总收入</text>
+      <text class="overview-value income">¥{{fmt.toFixed2(statistics.totalIncome)}}</text>
+    </view>
+    
+    <view class="overview-divider"></view>
+    
+    <view class="overview-item">
+      <text class="overview-label">总支出</text>
+      <text class="overview-value expense">¥{{fmt.toFixed2(statistics.totalExpense)}}</text>
+    </view>
+    
+    <view class="overview-divider"></view>
+    
+    <view class="overview-item">
+      <text class="overview-label">结余</text>
+      <text class="overview-value balance">¥{{fmt.toFixed2(statistics.balance)}}</text>
+    </view>
+  </view>
+
+  <!-- 图表区域 -->
+  <view class="chart-section">
+    <view class="section-header">
+      <text class="section-title">收支趋势</text>
+      <text class="section-more">查看详情</text>
+    </view>
+    
+    <view class="chart-placeholder">
+      <view class="chart-bars">
+        <view class="chart-bar-group" wx:for="{{chartData}}" wx:key="date">
+          <view class="chart-bar income-bar" 
+                style="height: {{item.income / 100}}rpx;"></view>
+          <view class="chart-bar expense-bar" 
+                style="height: {{item.expense / 5}}rpx;"></view>
+          <text class="chart-date">{{item.date}}</text>
+        </view>
+      </view>
+      
+      <view class="chart-legend">
+        <view class="legend-item">
+          <view class="legend-color income"></view>
+          <text>收入</text>
+        </view>
+        <view class="legend-item">
+          <view class="legend-color expense"></view>
+          <text>支出</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类统计 -->
+  <view class="category-section">
+    <view class="section-header">
+      <text class="section-title">分类统计</text>
+      <text class="section-more" bindtap="exportData">导出</text>
+    </view>
+    
+    <view class="category-list">
+      <view class="category-item" wx:for="{{statistics.categoryStats}}" 
+            wx:key="name" data-category="{{item}}" bindtap="viewCategoryDetail">
+        <view class="category-info">
+          <view class="category-color" style="background-color: {{item.color}}"></view>
+          <view class="category-details">
+            <text class="category-name">{{item.name}}</text>
+            <text class="category-amount">¥{{fmt.toFixed2(item.amount)}}</text>
+          </view>
+        </view>
+        
+        <view class="category-progress">
+          <view class="progress-bar">
+            <view class="progress-fill" 
+                  style="width: {{item.percentage}}%; background-color: {{item.color}}"></view>
+          </view>
+          <text class="percentage">{{item.percentage}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

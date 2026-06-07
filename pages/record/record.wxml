@@ -1,0 +1,80 @@
+<!--pages/record/record.wxml-->
+<view class="container">
+  <!-- 记录类型切换 -->
+  <view class="type-switch">
+    <view class="switch-btn {{recordType === 'expense' ? 'active' : ''}}" 
+          data-type="expense" bindtap="switchType">
+      支出
+    </view>
+    <view class="switch-btn {{recordType === 'income' ? 'active' : ''}}" 
+          data-type="income" bindtap="switchType">
+      收入
+    </view>
+  </view>
+
+  <!-- 金额输入 -->
+  <view class="amount-section">
+    <view class="amount-label">金额</view>
+    <view class="amount-input">
+      <text class="currency">¥</text>
+      <input type="digit" placeholder="0.00" value="{{amount}}" 
+             bindinput="inputAmount" class="amount-field"/>
+    </view>
+  </view>
+
+  <!-- 分类选择 -->
+  <view class="category-section">
+    <view class="section-title">分类</view>
+    <view class="category-list">
+      <view class="category-item {{selectedCategory.id === item.id ? 'selected' : ''}}" 
+            wx:for="{{categories}}" wx:key="id" 
+            data-category="{{item}}" bindtap="selectCategory">
+        <view class="category-icon" style="background-color: {{item.color}}">
+          {{item.icon}}
+        </view>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日期选择 -->
+  <view class="form-section">
+    <view class="form-item">
+      <text class="form-label">日期</text>
+      <picker mode="date" value="{{date}}" bindchange="changeDate">
+        <view class="form-value">{{date}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 备注输入 -->
+  <view class="form-section">
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <input placeholder="添加备注..." value="{{remark}}" 
+             bindinput="inputRemark" class="form-input"/>
+    </view>
+  </view>
+
+  <!-- 图片上传 -->
+  <view class="image-section">
+    <view class="section-title">图片（可选）</view>
+    <view class="image-list">
+      <view class="image-item" wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="image-preview" 
+               bindtap="previewImage" data-url="{{item}}"></image>
+        <view class="image-delete" data-index="{{index}}" bindtap="deleteImage">×</view>
+      </view>
+      
+      <view class="image-add" bindtap="chooseImage" wx:if="{{images.length < 3}}">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加图片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-section">
+    <button class="save-btn" bindtap="saveRecord">保存记录</button>
+  </view>
+</view>

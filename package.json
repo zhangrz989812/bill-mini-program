@@ -1,0 +1,15 @@
+{
+  "name": "bill-mini-program",
+  "version": "1.0.0",
+  "description": "微信小程序记账本 - 个人财务管理工具",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["微信小程序", "记账本", "财务管理", "云开发"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tdesign-miniprogram": "^1.0.0"
+  }
+}

@@ -1,0 +1,41 @@
+/**
+ * WXS 格式化工具模块
+ * WXS 不支持 ES6+ 语法，必须用 ES5
+ */
+var format = {
+  /**
+   * 保留两位小数
+   */
+  toFixed2: function (num) {
+    if (num === undefined || num === null) return '0.00'
+    var n = parseFloat(num)
+    if (isNaN(n)) return '0.00'
+    return n.toFixed(2)
+  },
+
+  /**
+   * 格式化金额（带千分位）
+   */
+  formatMoney: function (num) {
+    if (num === undefined || num === null) return '0.00'
+    var n = parseFloat(num)
+    if (isNaN(n)) return '0.00'
+    var parts = n.toFixed(2).split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    return parts.join('.')
+  },
+
+  /**
+   * 格式化日期（取月/日）
+   */
+  formatDate: function (dateStr) {
+    if (!dateStr) return ''
+    var parts = dateStr.split('-')
+    if (parts.length >= 3) {
+      return parts[1] + '/' + parts[2]
+    }
+    return dateStr
+  }
+}
+
+module.exports = format

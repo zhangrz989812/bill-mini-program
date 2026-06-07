@@ -1,0 +1,147 @@
+<!--pages/budget/budget.wxml-->
+<wxs src="../../utils/format.wxs" module="fmt" />
+<view class="container">
+  <!-- 月份选择 -->
+  <view class="month-selector">
+    <picker mode="date" fields="month" value="{{currentMonth}}" bindchange="changeMonth">
+      <view class="month-picker">
+        <text class="month-text">{{currentMonth}}</text>
+        <text class="month-arrow">▼</text>
+      </view>
+    </picker>
+    
+    <view class="edit-btn" bindtap="{{isEditing ? 'stopEditing' : 'startEditing'}}">
+      {{isEditing ? '完成编辑' : '编辑预算'}}
+    </view>
+  </view>
+
+  <!-- 总预算概览 -->
+  <view class="budget-overview">
+    <view class="overview-header">
+      <text class="overview-title">本月预算</text>
+      <text class="overview-month">{{currentMonth}}</text>
+    </view>
+    
+    <view class="budget-amount">
+      <view class="amount-item">
+        <text class="amount-label">总预算</text>
+        <text class="amount-value">¥{{fmt.toFixed2(totalBudget)}}</text>
+      </view>
+      
+      <view class="amount-item">
+        <text class="amount-label">已使用</text>
+        <text class="amount-value expense">¥{{fmt.toFixed2(usedBudget)}}</text>
+      </view>
+      
+      <view class="amount-item">
+        <text class="amount-label">剩余</text>
+        <text class="amount-value balance">¥{{fmt.toFixed2(remainingBudget)}}</text>
+      </view>
+    </view>
+    
+    <view class="progress-section">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{budgetProgress}}%;"></view>
+      </view>
+      <text class="progress-text">已使用 {{budgetProgress}}%</text>
+    </view>
+    
+    <!-- 修改总预算 -->
+    <view class="budget-input-section" wx:if="{{isEditing}}">
+      <text class="input-label">修改总预算</text>
+      <view class="input-wrapper">
+        <text class="currency">¥</text>
+        <input type="digit" value="{{totalBudget}}" bindinput="changeTotalBudget" 
+               class="budget-input"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类预算 -->
+  <view class="category-budget-section">
+    <view class="section-header">
+      <text class="section-title">分类预算</text>
+      <text class="section-more" wx:if="{{isEditing}}" bindtap="showAddModal">+ 新增</text>
+    </view>
+    
+    <view class="category-list" wx:if="{{categoryBudgets.length > 0}}">
+      <view class="category-item" wx:for="{{categoryBudgets}}" wx:key="id">
+        <view class="category-info">
+          <view class="category-name">{{item.categoryName}}</view>
+          <view class="category-budget">
+            <text class="budget-used">已用 ¥{{fmt.toFixed2(item.used)}}</text>
+            <text class="budget-total">/ ¥{{fmt.toFixed2(item.budget)}}</text>
+          </view>
+        </view>
+        
+        <view class="category-progress">
+          <view class="progress-bar">
+            <view class="progress-fill" 
+                  style="width: {{item.percentage}}%; background-color: {{item.percentage > 90 ? '#fa5151' : '#0052d9'}}"></view>
+          </view>
+          <text class="percentage">{{item.percentage}}%</text>
+        </view>
+        
+        <view class="delete-btn" wx:if="{{isEditing}}" 
+              data-id="{{item.id}}" bindtap="deleteCategoryBudget">
+          删除
+        </view>
+      </view>
+    </view>
+    
+    <view class="empty-state" wx:else>
+      <text class="empty-text">暂无分类预算</text>
+      <text class="empty-hint">点击右上角"编辑预算"添加分类预算</text>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-section" wx:if="{{isEditing}}">
+    <button class="save-btn" bindtap="saveBudgetSettings">保存设置</button>
+  </view>
+
+  <!-- 新增弹窗 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="hideModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">新增分类预算</text>
+        <text class="modal-close" bindtap="hideModal">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <!-- 选择分类 -->
+        <view class="form-group">
+          <text class="form-label">选择分类</text>
+          <view class="category-select-list">
+            <view class="category-select-item {{newBudget.categoryId === item.id ? 'selected' : ''}}" 
+                  wx:for="{{availableCategories}}" wx:key="id" 
+                  data-category="{{item}}" bindtap="selectCategory">
+              {{item.name}}
+            </view>
+          </view>
+        </view>
+        
+        <!-- 输入预算金额 -->
+        <view class="form-group">
+          <text class="form-label">预算金额</text>
+          <view class="input-wrapper">
+            <text class="currency">¥</text>
+            <input type="digit" placeholder="请输入预算金额" value="{{newBudget.amount}}" 
+                   bindinput="inputBudgetAmount" class="budget-input"/>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideModal">取消</button>
+        <button class="confirm-btn" bindtap="addCategoryBudget">确认添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>
