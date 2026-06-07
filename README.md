@@ -1,234 +1,172 @@
 # 微信小程序记账本
 
-一款简洁易用的个人记账小程序，帮助您轻松管理日常财务。
+一款简洁易用的个人记账小程序，集成 AI 账单分析助手，帮助您轻松管理日常财务。
 
 ## 功能特性
 
 ### 核心功能
-- ✅ **基础记账**：支持收入/支出记录
+- ✅ **基础记账**：支持收入/支出记录，自动同步云端
 - ✅ **分类管理**：预设常用分类，支持自定义
-- ✅ **统计图表**：月度/年度统计，分类占比分析
+- ✅ **统计图表**：月度统计，分类占比分析，收支趋势
 - ✅ **预算管理**：设置月度预算，监控支出进度
-- ✅ **数据同步**：微信云开发，数据云端同步
+- ✅ **AI 账单助手**：基于 DeepSeek 的智能消费分析
 
-### 界面设计
-- 🎨 **简洁现代风格**：清爽的UI设计
-- 📱 **响应式布局**：适配各种屏幕尺寸
-- 🌙 **深色模式**：支持系统深色模式
+### AI 账单助手
+- 🤖 输入问题即可获得个性化消费分析
+- 📊 自动获取本月账单摘要
+- 💡 提供省钱建议和消费洞察
+- 🔒 API Key 安全存储在云函数环境变量中
 
 ## 技术栈
 
-### 前端
-- **框架**：微信小程序原生开发
-- **UI组件库**：TDesign（可选）
-- **样式**：WXSS + CSS变量
-
-### 后端
-- **云服务**：微信云开发
-- **数据库**：微信云数据库
-- **云函数**：Node.js
-- **存储**：微信云存储
+| 类型 | 技术 |
+|------|------|
+| 前端 | 微信小程序原生开发 |
+| UI | TDesign 组件库（可选） |
+| 后端 | 微信云开发 |
+| 数据库 | 微信云数据库 |
+| 云函数 | Node.js |
+| AI | DeepSeek API |
 
 ## 项目结构
 
 ```
-bill/
-├── app.js                    # 小程序逻辑
-├── app.json                  # 小程序配置
-├── app.wxss                  # 全局样式
-├── project.config.json       # 项目配置
-├── package.json              # 依赖配置
-├── pages/                    # 页面目录
-│   ├── index/                # 首页
-│   ├── record/               # 记账页
-│   ├── statistics/           # 统计页
-│   ├── category/             # 分类页
-│   ├── budget/               # 预算页
-│   └── profile/              # 我的页
-├── cloud/                    # 云函数目录
-│   └── functions/            # 云函数
-│       ├── user-login/       # 用户登录
-│       └── add-record/       # 添加记录
-├── images/                   # 图片资源
-│   └── tab/                  # tabBar图标
-└── utils/                    # 工具函数
+bill-mini-program/
+├── app.js                          # 小程序入口
+├── app.json                        # 全局配置
+├── app.wxss                        # 全局样式
+├── project.config.json             # 项目配置
+├── package.json                    # 依赖配置
+├── sitemap.json                    # 搜索索引配置
+├── pages/
+│   ├── index/                      # 首页（月度概览）
+│   ├── record/                     # 记账页
+│   ├── statistics/                 # 统计页
+│   ├── category/                   # 分类页
+│   ├── budget/                     # 预算页
+│   ├── profile/                    # 我的页
+│   └── ai-chat/                    # AI 账单助手
+├── cloud/functions/
+│   ├── record-add/                 # 添加记账记录
+│   ├── statistics-get/             # 获取统计数据
+│   └── ai-chat/                    # AI 分析（DeepSeek）
+├── utils/
+│   └── format.wxs                  # WXS 格式化工具
+└── images/tab/                     # Tab 图标
 ```
 
 ## 快速开始
 
 ### 1. 环境准备
-- 下载并安装 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
+
+- 下载 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
 - 注册微信小程序账号，获取 AppID
+- 注册 [DeepSeek](https://platform.deepseek.com/) 获取 API Key
 
-### 2. 项目配置
-1. 打开微信开发者工具
-2. 导入项目，选择 `bill` 目录
-3. 在 `project.config.json` 中填入你的 AppID
-4. 在 `app.js` 中修改云开发环境ID
+### 2. 克隆项目
 
-### 3. 云开发配置
+```bash
+git clone https://github.com/zhangrz989812/bill-mini-program.git
+cd bill-mini-program
+```
+
+### 3. 配置项目
+
+1. 打开微信开发者工具，导入项目
+2. 修改 `project.config.json` 中的 `appid`
+3. 修改 `app.js` 中的云环境 ID
+
+### 4. 云开发配置
+
 1. 在微信开发者工具中开通云开发
-2. 创建云开发环境
-3. 上传云函数：右键点击 `cloud/functions` 目录下的云函数，选择"上传并部署"
+2. 创建 `records` 集合（权限：仅创建者可读写）
+3. 部署云函数：
+   - 右键 `cloud/functions/record-add` → 上传并部署
+   - 右键 `cloud/functions/statistics-get` → 上传并部署
+   - 右键 `cloud/functions/ai-chat` → 上传并部署
 
-### 4. 构建npm
-1. 在微信开发者工具中：工具 → 构建npm
-2. 勾选"使用npm模块"
+### 5. 配置 DeepSeek API
 
-### 5. 运行项目
-1. 点击"编译"按钮
-2. 在模拟器中预览
-3. 真机调试
+在 `ai-chat` 云函数的环境变量中配置：
+
+| 变量名 | 值 |
+|--------|-----|
+| DEEPSEEK_API_KEY | 你的 DeepSeek API Key |
+| DEEPSEEK_BASE_URL | https://api.deepseek.com |
+| DEEPSEEK_MODEL | deepseek-chat |
+
+### 6. 运行
+
+点击「编译」按钮即可预览。
 
 ## 使用说明
 
-### 记账流程
-1. 点击首页的"记一笔"按钮
+### 记账
+1. 点击首页「记一笔」
 2. 选择收入/支出类型
-3. 输入金额
-4. 选择分类
-5. 设置日期和备注
-6. 可选：添加图片
-7. 保存记录
+3. 输入金额、选择分类
+4. 保存记录
 
 ### 查看统计
-1. 点击底部tabBar的"统计"
-2. 切换月度/年度视图
-3. 查看收支趋势图表
-4. 查看分类统计详情
+1. 点击底部「统计」
+2. 查看月度收支概览
+3. 查看分类支出排行
 
-### 设置预算
-1. 进入"我的" → "预算管理"
-2. 设置月度总预算
-3. 为各分类设置预算
-4. 监控预算执行情况
-
-## 数据库设计
-
-### 用户集合 (users)
-```json
-{
-  "_id": "用户ID",
-  "_openid": "微信openid",
-  "nickName": "昵称",
-  "avatarUrl": "头像",
-  "createdAt": "创建时间",
-  "updatedAt": "更新时间"
-}
-```
-
-### 记账记录集合 (records)
-```json
-{
-  "_id": "记录ID",
-  "_openid": "用户openid",
-  "type": "income/expense",
-  "amount": 100.50,
-  "categoryId": "分类ID",
-  "categoryName": "分类名称",
-  "date": "2026-06-07",
-  "remark": "备注",
-  "images": ["图片URL"],
-  "createdAt": "创建时间",
-  "updatedAt": "更新时间"
-}
-```
-
-### 分类集合 (categories)
-```json
-{
-  "_id": "分类ID",
-  "_openid": "用户openid",
-  "name": "分类名称",
-  "icon": "图标名称",
-  "color": "#颜色代码",
-  "type": "income/expense",
-  "isDefault": false,
-  "sort": 0,
-  "createdAt": "创建时间"
-}
-```
-
-### 预算集合 (budgets)
-```json
-{
-  "_id": "预算ID",
-  "_openid": "用户openid",
-  "month": "2026-06",
-  "totalBudget": 5000,
-  "categoryBudgets": [
-    {
-      "categoryId": "分类ID",
-      "amount": 1000
-    }
-  ],
-  "createdAt": "创建时间",
-  "updatedAt": "更新时间"
-}
-```
+### AI 分析
+1. 进入「我的」→「AI账单助手」
+2. 输入问题，如「分析本月消费」
+3. 查看 AI 分析结果
 
 ## 云函数说明
 
-### user-login
-- **功能**：用户登录/注册
-- **参数**：`userInfo` - 用户信息
-- **返回**：用户信息
+### record-add
+添加记账记录到云数据库。
 
-### add-record
-- **功能**：添加记账记录
-- **参数**：
-  - `type`: 类型 (income/expense)
-  - `amount`: 金额
-  - `categoryId`: 分类ID
-  - `date`: 日期
-  - `remark`: 备注
-  - `images`: 图片数组
-- **返回**：记录信息
+### statistics-get
+按月份查询统计数据，返回：
+- 总收入/总支出/结余
+- 分类支出排行
+- 每日收支趋势
+- 大额支出 Top5
+- 最近记录
 
-## 开发计划
+### ai-chat
+获取本月账单摘要，调用 DeepSeek API 进行分析。
 
-### 已完成 ✅
-- [x] 项目初始化
-- [x] 基础页面开发
-- [x] 记账功能
-- [x] 分类管理
-- [x] 统计图表
-- [x] 预算管理
-- [x] 用户登录
+## 数据库设计
 
-### 待开发 📋
-- [ ] 数据导出功能
-- [ ] 拍照识别票据
-- [ ] 语音记账
-- [ ] 多人协作记账
-- [ ] 多币种支持
-- [ ] 提醒功能
-- [ ] 数据备份与恢复
-- [ ] 性能优化
+### records 集合
 
-## 注意事项
+```json
+{
+  "_openid": "微信 openid",
+  "type": "expense",
+  "amount": 45.5,
+  "categoryId": 1,
+  "categoryName": "餐饮",
+  "categoryIcon": "🍜",
+  "categoryColor": "#ff9500",
+  "date": "2026-06-07",
+  "month": "2026-06",
+  "remark": "午餐",
+  "images": [],
+  "createdAt": 1780000000000,
+  "updatedAt": 1780000000000
+}
+```
 
-1. **隐私保护**：确保用户数据安全，遵守微信隐私规范
-2. **性能优化**：使用分页加载，避免一次性加载过多数据
-3. **错误处理**：完善错误处理机制，提供友好的错误提示
-4. **兼容性**：测试不同微信版本和设备的兼容性
-5. **审核规范**：遵守微信小程序审核规范，避免违规内容
+## 开发文档
 
-## 常见问题
-
-### Q: 如何配置云开发环境？
-A: 在 `app.js` 中修改 `wx.cloud.init` 的 `env` 参数为你的云开发环境ID。
-
-### Q: 如何添加自定义分类？
-A: 进入"分类管理"页面，点击"编辑分类"，然后点击"新增分类"。
-
-### Q: 数据会同步到云端吗？
-A: 是的，使用微信云开发，数据会自动同步到云端，支持多设备同步。
-
-### Q: 如何导出数据？
-A: 当前版本暂不支持数据导出，后续版本会添加此功能。
+- [DEVELOPMENT.md](./DEVELOPMENT.md) - 完整开发指南
+- [AI_DEVELOPMENT.md](./AI_DEVELOPMENT.md) - AI 功能开发文档
 
 ## 更新日志
+
+### v1.1.0 (2026-06-08)
+- ✨ 新增 AI 账单助手功能
+- ✨ 新增 record-add、statistics-get、ai-chat 云函数
+- 🔧 记账/统计/首页接入真实云数据库
+- 📝 新增 AI_DEVELOPMENT.md 文档
 
 ### v1.0.0 (2026-06-07)
 - 🎉 首次发布
@@ -236,18 +174,7 @@ A: 当前版本暂不支持数据导出，后续版本会添加此功能。
 - ✅ 分类管理
 - ✅ 统计图表
 - ✅ 预算管理
-- ✅ 用户登录
 
 ## 许可证
 
 MIT License
-
-## 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- 邮箱：example@example.com
-- 微信：your-wechat-id
-
----
-
-**感谢使用记账本小程序！** 💰
