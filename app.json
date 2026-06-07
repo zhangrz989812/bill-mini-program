@@ -5,7 +5,8 @@
     "pages/statistics/statistics",
     "pages/category/category",
     "pages/budget/budget",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/ai-chat/ai-chat"
   ],
   "window": {
     "backgroundTextStyle": "light",

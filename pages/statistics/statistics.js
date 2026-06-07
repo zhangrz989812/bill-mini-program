@@ -55,34 +55,49 @@ Page({
   // 加载统计数据
   loadStatistics: function () {
     this.setData({ loading: true })
-    
-    // 模拟数据
-    setTimeout(() => {
-      this.setData({
-        statistics: {
-          totalIncome: 8500.00,
-          totalExpense: 5230.50,
-          balance: 3269.50,
-          categoryStats: [
-            { name: '餐饮', amount: 1580.00, percentage: 30.2, color: '#ff9500' },
-            { name: '交通', amount: 850.50, percentage: 16.3, color: '#5856d6' },
-            { name: '购物', amount: 1200.00, percentage: 22.9, color: '#ff2d55' },
-            { name: '娱乐', amount: 650.00, percentage: 12.4, color: '#af52de' },
-            { name: '其他', amount: 950.00, percentage: 18.2, color: '#8e8e93' }
-          ]
-        },
-        chartData: [
-          { date: '06-01', income: 8500, expense: 0 },
-          { date: '06-02', income: 0, expense: 120 },
-          { date: '06-03', income: 0, expense: 85 },
-          { date: '06-04', income: 0, expense: 250 },
-          { date: '06-05', income: 0, expense: 180 },
-          { date: '06-06', income: 0, expense: 45 },
-          { date: '06-07', income: 0, expense: 25.5 }
-        ],
-        loading: false
-      })
-    }, 1000)
+
+    const month = this.data.currentDate
+
+    wx.cloud.callFunction({
+      name: 'statistics-get',
+      data: {
+        month
+      },
+      success: (res) => {
+        const result = res.result || {}
+
+        if (!result.success) {
+          this.setData({ loading: false })
+          wx.showToast({
+            title: result.message || '统计加载失败',
+            icon: 'none'
+          })
+          return
+        }
+
+        const summary = result.summary || {}
+
+        this.setData({
+          statistics: {
+            totalIncome: summary.totalIncome || 0,
+            totalExpense: summary.totalExpense || 0,
+            balance: summary.balance || 0,
+            categoryStats: summary.categoryStats || []
+          },
+          chartData: summary.dailyStats || [],
+          loading: false
+        })
+      },
+      fail: (err) => {
+        console.error('statistics-get 调用失败:', err)
+        this.setData({ loading: false })
+
+        wx.showToast({
+          title: '统计加载失败',
+          icon: 'none'
+        })
+      }
+    })
   },
 
   // 查看分类详情

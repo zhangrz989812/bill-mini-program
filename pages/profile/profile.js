@@ -8,6 +8,12 @@ Page({
     // 菜单列表
     menuList: [
       {
+        id: 'ai',
+        title: 'AI账单助手',
+        icon: '🤖',
+        url: '/pages/ai-chat/ai-chat'
+      },
+      {
         id: 'budget',
         title: '预算管理',
         icon: '💰',

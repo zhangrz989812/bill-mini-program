@@ -149,29 +149,48 @@ Page({
       categoryColor: selectedCategory.color,
       date: date,
       remark: remark,
-      images: images,
-      createdAt: new Date().getTime()
+      images: images
     }
 
-    // 模拟保存到云数据库
-    console.log('保存记录:', record)
-    
+    // 调用云函数保存记录
     wx.showLoading({
       title: '保存中...'
     })
 
-    setTimeout(() => {
-      wx.hideLoading()
-      wx.showToast({
-        title: '保存成功',
-        icon: 'success'
-      })
+    wx.cloud.callFunction({
+      name: 'record-add',
+      data: record,
+      success: (res) => {
+        wx.hideLoading()
 
-      // 返回上一页
-      setTimeout(() => {
-        wx.navigateBack()
-      }, 1500)
-    }, 1000)
+        const result = res.result || {}
+
+        if (result.success) {
+          wx.showToast({
+            title: '保存成功',
+            icon: 'success'
+          })
+
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 1000)
+        } else {
+          wx.showToast({
+            title: result.message || '保存失败',
+            icon: 'none'
+          })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        console.error('record-add 调用失败:', err)
+
+        wx.showToast({
+          title: '保存失败',
+          icon: 'none'
+        })
+      }
+    })
   },
 
   // 预览图片

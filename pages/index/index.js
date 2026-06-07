@@ -36,46 +36,67 @@ Page({
     this.loadData()
   },
 
+  getCurrentMonth: function () {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    return `${year}-${month}`
+  },
+
   loadData: function () {
     this.setData({ loading: true })
-    
-    // 模拟数据加载
-    setTimeout(() => {
-      this.setData({
-        monthOverview: {
-          totalIncome: 8500.00,
-          totalExpense: 5230.50,
-          balance: 3269.50
-        },
-        recentRecords: [
-          {
-            id: 1,
-            type: 'expense',
-            category: '餐饮',
-            amount: -45.00,
-            date: '2026-06-07',
-            remark: '午餐'
-          },
-          {
-            id: 2,
-            type: 'income',
-            category: '工资',
-            amount: 8500.00,
-            date: '2026-06-01',
-            remark: '6月工资'
-          },
-          {
-            id: 3,
-            type: 'expense',
-            category: '交通',
-            amount: -25.50,
-            date: '2026-06-06',
-            remark: '地铁'
+
+    wx.cloud.callFunction({
+      name: 'statistics-get',
+      data: {
+        month: this.getCurrentMonth()
+      },
+      success: (res) => {
+        const result = res.result || {}
+
+        if (!result.success) {
+          this.setData({ loading: false })
+          wx.showToast({
+            title: result.message || '数据加载失败',
+            icon: 'none'
+          })
+          return
+        }
+
+        const summary = result.summary || {}
+
+        const recentRecords = (summary.recentRecords || []).map(item => {
+          return {
+            id: item.id,
+            type: item.type,
+            category: item.categoryName,
+            amount: item.type === 'expense' ? -item.amount : item.amount,
+            date: item.date,
+            remark: item.remark
           }
-        ],
-        loading: false
-      })
-    }, 1000)
+        })
+
+        this.setData({
+          monthOverview: {
+            totalIncome: summary.totalIncome || 0,
+            totalExpense: summary.totalExpense || 0,
+            balance: summary.balance || 0
+          },
+          recentRecords,
+          loading: false
+        })
+      },
+      fail: (err) => {
+        console.error('首页数据加载失败:', err)
+
+        this.setData({ loading: false })
+
+        wx.showToast({
+          title: '数据加载失败',
+          icon: 'none'
+        })
+      }
+    })
   },
 
   // 跳转到记账页面

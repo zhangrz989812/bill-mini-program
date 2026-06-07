@@ -4,7 +4,7 @@ App({
     // 初始化云开发环境
     if (wx.cloud) {
       wx.cloud.init({
-        env: 'your-env-id', // 替换为你的云开发环境ID
+        env: 'your-env-id', // TODO: 替换为你自己的微信云开发环境 ID
         traceUser: true,
       })
     } else {
