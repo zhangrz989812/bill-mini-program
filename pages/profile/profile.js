@@ -20,12 +20,6 @@ Page({
         url: '/pages/category/category'
       },
       {
-        id: 'export',
-        title: '数据导出',
-        icon: '📤',
-        action: 'exportData'
-      },
-      {
         id: 'settings',
         title: '设置',
         icon: '⚙️',
@@ -88,22 +82,6 @@ Page({
     } else if (menu.action) {
       this[menu.action]()
     }
-  },
-
-  // 导出数据
-  exportData: function () {
-    wx.showModal({
-      title: '导出数据',
-      content: '确定要导出所有记账数据吗？',
-      success: (res) => {
-        if (res.confirm) {
-          wx.showToast({
-            title: '导出功能开发中',
-            icon: 'none'
-          })
-        }
-      }
-    })
   },
 
   // 打开设置
